@@ -17,7 +17,7 @@ Dengan perkembangannya teknologi, stroke dapat di deteksi dengan penggunaan mach
 3. 
 - Solution Statement
 ## Data Understanding
-Pada repository ini digunakan dataset [Stroke Prediction Kaggle](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset). Dataset ini memeliki 5.510 sampel yang mengalami stroke dan tidak dengan berbagai data. Data tersebut merupakan data non-numerik seperti work type, residence type, dan smoking status. Serta fitur numerik seperti age, body mass index, dan average glucose level.
+Pada repository ini digunakan dataset [Stroke Prediction Kaggle](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset). Dataset ini memeliki 5.510 sampel yang mengalami stroke dan tidak dengan berbagai data. Data tersebut merupakan data non-numerik seperti_ work type, residence type, dan smoking status_. Serta fitur numerik seperti _age, body mass index, dan average glucose level_.
 ### Variabel-variabel pada Stroke Prediction Dataset
 - Gender : merupakan jenis kelamin dari pasien
 - Age : merupakan umur atau usia dari pasien
@@ -32,7 +32,80 @@ Pada repository ini digunakan dataset [Stroke Prediction Kaggle](https://www.kag
 Pada dataset ini dilakukan exploratory data analysis untuk mengetahui lebih lanjut data-data yang nantinya akan digunakan
 
 ## Data Preparation
+Pada dataset ini dilakukan empat tahap persiapan data, yaitu:
+- Encoding fitur kategori 
+Terdapat 5 data kategori yaitu 'gender', 'ever_married', 'work_type', 'Residence_type', 'smoking_status' yang akan dilakukan proses encoding menggunakan teknik _one-hot-encoding_. Teknik ini memberikan fitur baru yang sesuai sehingga dapat mewakili variabel kategori.
+````
+categorical_columns = ['gender', 'ever_married', 'work_type', 'Residence_type', 'smoking_status']
+
+for column in categorical_columns:
+    dummies = pd.get_dummies(stroke[column], prefix=column)
+    stroke = pd.concat([stroke, dummies], axis=1)
+    stroke = stroke.drop(columns=column)
+
+
+stroke['bmi'] = stroke['bmi'].replace(np.NaN, 0)
+````
+- Pembagian dataset dengan fungsi train_test_split dari library sklearn
+Dataset dibagi menjadi data train dan data test untuk menguji seberapa baik generalisasi model terhadap data baru.
+````
+from sklearn.model_selection import train_test_split
+
+x = stroke.drop(["age"], axis=1)
+y = stroke["age"]
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, random_state = 123)
+````
+````
+print(f'Total # of sample in whole dataset: {len(x)}')
+print(f'Total # of sample in train dataset: {len(x_train)}')
+print(f'Total # of sample in test dataset: {len(x_test)}')
+````
+- Standarisasi
+````
+from sklearn.preprocessing import StandardScaler
+numerical_features = ['avg_glucose_level', 'bmi']
+scaler = StandardScaler()
+scaler.fit(x_train[numerical_features])
+x_train[numerical_features] = scaler.transform(x_train.loc[:, numerical_features])
+x_train[numerical_features].head()
+````
+````
+x_train[numerical_features].describe().round(4)
+````
+
 ## Modeling
+Pada Tahapan modeling digunakan tiga algoritma yaitu :
+- K-Nearest Neighbor
+````
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.metrics import mean_squared_error
+
+knn = KNeighborsRegressor(n_neighbors=10)
+knn.fit(x_train, y_train)
+
+models.loc['train_mse','knn'] = mean_squared_error(y_pred = knn.predict(x_train), y_true=y_train)
+````
+
+- Random Forest
+````
+from sklearn.ensemble import RandomForestRegressor
+
+RF = RandomForestRegressor(n_estimators=50, max_depth=16, random_state=55, n_jobs=-1)
+RF.fit(x_train, y_train)
+
+models.loc['train_mse','RandomForest'] = mean_squared_error(y_pred=RF.predict(x_train), y_true=y_train)
+````
+
+- Boosting Algorithm
+````
+from sklearn.ensemble import AdaBoostRegressor
+
+boosting = AdaBoostRegressor(learning_rate=0.05, random_state=55)
+boosting.fit(x_train, y_train)
+models.loc['train_mse','Boosting'] = mean_squared_error(y_pred=boosting.predict(x_train), y_true=y_train)
+````
+  
+
 ## Evaluation
 ## Bibliography
 Kaur, M., Sakhare, S. R., Wanjale, K., & Akter, F. (2022). Early stroke prediction methods for prevention of strokes. Behavioural Neurology, 2022.
