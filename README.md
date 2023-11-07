@@ -20,7 +20,7 @@ Dengan perkembangannya teknologi, stroke dapat di deteksi dengan penggunaan mach
 2. Menyederhanakan data-data yang masih memiliki variabel kategorik dengan _One-Hot-Encoding_.
 3. Menggunakan MSE sebagai evaluasi model yang mudah dipahami dan dinterpretasikan. MSE memiliki kekurangan yaitu sensitif dengan outliers. Sehingga diperlukannya preparasi data pada bagian outliers.
 ## Data Understanding
-Pada repository ini digunakan dataset [Stroke Prediction Kaggle](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset). Dataset ini memeliki 5.510 sampel yang mengalami stroke dan tidak dengan berbagai data. Data tersebut merupakan data non-numerik seperti _work type, residence type, dan smoking status_. Serta fitur numerik seperti _age, body mass index, dan average glucose level_.
+Pada repository ini digunakan dataset [Stroke Prediction Kaggle](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset). Dataset ini memeliki 5.510 pasien. Data tersebut merupakan data non-numerik seperti _work type, residence type, dan smoking status_. Serta fitur numerik seperti _age, body mass index, dan average glucose level_.
 ### Variabel-variabel pada Stroke Prediction Dataset
 - Gender : merupakan jenis kelamin dari pasien
 - Age : merupakan umur atau usia dari pasien
