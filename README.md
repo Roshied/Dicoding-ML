@@ -19,31 +19,54 @@ Dengan perkembangannya teknologi, stroke dapat di deteksi dengan penggunaan mach
 1. Menggunakan 3 model prediksi yaitu K-Nearest Neighbor (KNN), Random Forest, dan Algoritma Boosting
 2. Menyederhanakan data-data yang masih memiliki variabel kategorik dengan _One-Hot-Encoding_.
 3. Menggunakan MSE sebagai evaluasi model yang mudah dipahami dan dinterpretasikan. MSE memiliki kekurangan yaitu sensitif dengan outliers. Sehingga diperlukannya preparasi data pada bagian outliers.
+
 ## Data Understanding
 Pada repository ini digunakan dataset [Stroke Prediction Kaggle](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset). Dataset ini memeliki 5.510 pasien. Data tersebut merupakan data non-numerik seperti _work type, residence type, dan smoking status_. Serta fitur numerik seperti _age, body mass index, dan average glucose level_.
-### Variabel-variabel pada Stroke Prediction Dataset
-- Gender : merupakan jenis kelamin dari pasien
-- Age : merupakan umur atau usia dari pasien
-- Hypertension : merupakan pengidap hipertensi dari pasien 
-- Heart Disease : merupakan pengidap penyakit jantung dari pasien
-- Ever Married : merupakan kondisi pasien telah menikah
-- Work Type : merupakan jenis pekerjaan yang dilakukan pasien
-- Residence Type : merupakan jenis tempat tinggal pasien
-- Average Glucose Level : merupakan nilai rata-rata level gula darah pasien
-- Body Mass Index : merupakan nilai berat badan ideal dari pasien
-
-Pada dataset ini dilakukan exploratory data analysis untuk mengetahui lebih lanjut data-data yang nantinya akan digunakan
-- Deskripsi Variabel
-  Deskripsi variabel dilakukan untuk mengetahu jenis-jenis variabel dan nilai-nilai dari variabel tersebut. Data tersebut kemudian dapat membantu memahami pengelolaan data yang akan dipersiapkan.
+### Data Loading
+Import Library yang dibutuhkan
 ````
+import zipfile, os
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+````
+Kemudian, memasukan dataset
+````
+local_zip = '/content/Stroke Prediction Dataset.zip'
+zip_ref = zipfile.ZipFile(local_zip, 'r')
+zip_ref.extractall('/content')
+zip_ref.close()
 stroke = pd.read_csv('healthcare-dataset-stroke-data.csv')
+len(stroke)
 stroke.info()
 ````
-![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/758e2733-a508-49e5-92e8-2139ea1a20f9)
+![image](https://github.com/Roshied/Dicoding-ML/assets/68040731/a2ab966c-f9b2-42bc-bdf3-738eafeaa6ba)
+- Terdapat 5110 baris (recods atau jumlah pengamatan) dalam dataset.
+- Terdapat 11 kolom yaitu : id, gender, age, hypertension, heart_disease, ever_married, work_type, Residence_type, avg_glucose_level, bmi, smoking_status, stroke.
+  
+Pada dataset ini dilakukan exploratory data analysis untuk mengetahui lebih lanjut data-data yang nantinya akan digunakan
+### Variabel-variabel pada Stroke Prediction Dataset
+Deskripsi Variabel
+  Deskripsi variabel dilakukan untuk mengetahu jenis-jenis variabel dan nilai-nilai dari variabel tersebut. Data tersebut kemudian dapat membantu memahami pengelolaan data yang akan dipersiapkan.
 ````
 stroke.head()
 ````
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/e25cf203-101c-4f67-ac71-96c48d5ff1bb)
+````
+stroke.describe()
+````
+![image](https://github.com/Roshied/Dicoding-ML/assets/68040731/30fc8c45-af35-444e-ac01-e3fe99b7a6b3)
+
+- Gender : merupakan jenis kelamin dari pasien yaitu male, female atau other
+- Age : merupakan umur atau usia dari pasien 0.8 sampai 82 tahun
+- Hypertension : merupakan pengidap hipertensi dari pasien yaitu 0 (tidak mengalami hypertension) dan 1 (mengalami hypertension)
+- Heart Disease : merupakan pengidap penyakit jantung dari pasien yaitu 0 (tidak mengalami penyakit jantung) dan 1 (mengalami penyakit jantung)
+- Ever Married : merupakan kondisi pasien telah menikah yaitu 0 (belum menikah) dan 1 (telah menikah)
+- Work Type : merupakan jenis pekerjaan yang dilakukan pasien yaitu private, self employed, never_worked, govt_job, dan children.
+- Residence Type : merupakan jenis tempat tinggal pasien yaitu urban dan rural
+- Average Glucose Level : merupakan nilai rata-rata level gula darah pasien dari 55 sampai 271.24
+- Body Mass Index : merupakan nilai berat badan ideal dari pasien dari 10.3 sampai 97.6
 
 dengan mendeskripsikan variabel-variabel tersebut dapat diketahui  Variabel numerik yaitu _age, body mass index, dan average glucose level_ dan variabel kategori yaitu _work type, residence type, dan smoking status_.
 - Missing Value
@@ -64,21 +87,26 @@ stroke
 
 - Outliers
   Kemudian sampel-sample yang memiliki nilai yang sangat jauh dari cakupan umum juga dikeluarkan dari dataset.
+
+### Fitur age
 ````
 sns.boxplot(x=stroke['age'])
 ````
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/c307b0e0-c1df-49a9-9d86-971ba75add43)
 
+### Fitur avg_glucose_level
 ````
 sns.boxplot(x=stroke['avg_glucose_level'])
 ````
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/4fb5a353-3aad-4620-a6e7-5fe6d419966e)
 
+### Fitur bmi
 ````
 sns.boxplot(x=stroke['bmi'])
 ````
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/842d8d14-1c5e-49ef-818f-d2402cc89464)
 
+### Membuat batas bawah dan atas
 ````
 Q1 = stroke.quantile(0.25)
 Q3 = stroke.quantile(0.75)
@@ -89,7 +117,9 @@ stroke.shape
 ````
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/30b10fa1-c615-4633-8223-4df9608de0c3)
 
-- Categorical Features
+## Multivariate Analysis
+### Categorical Features
+Pada tahap ini, pengecekan rata-rata umur terhadap masing-masing fitur untuk mengetahui pengaruh fitur kategori terhadap umur.
 ````
 cat_features = stroke.select_dtypes(include='object').columns.to_list()
 
@@ -101,15 +131,19 @@ for col in cat_features:
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/6a9774b9-92ac-46a6-8d02-b142502f2ff5)
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/7d698ad6-5e47-404a-b732-0cc91171cd0a)
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/9a69c0a6-a709-419f-a095-e9893bca5fc8)
+- Pada fitur gender umur cederung memiliki jumlah data yang hampir sama pada rentang 35-40.
+- Pada fitur ever_married terlihat perbedaan yaitu pada umur 20-50 telah menikah.
+- Pada fitur residence_type terbagi rata pada rural dan urban.
 
-- Numerical Features
+### Numerical Features
+Untuk mengamati hubungan antara fitur numerik menggunakan fungsi fairplot().
 ````
 sns.pairplot(stroke, diag_kind = 'kde')
 ````
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/5835592b-d743-4b9f-9306-9038403af442)
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/01bf5be2-3ec5-4afb-abd4-e86c5fa2aac1)
 
-- Correlation Matrix
+### Correlation Matrix
 ````
 plt.figure(figsize=(10, 8))
 correlation_matrix = stroke.corr().round(2)
@@ -120,8 +154,8 @@ plt.title("Correlation Matrix untuk Fitur Numerik ", size=20)
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/e1e92353-08ff-4f31-bc33-796d7e2d40ea)
 
 ## Data Preparation
-Pada dataset ini dilakukan empat tahap persiapan data, yaitu:
-- Encoding fitur kategori 
+Pada dataset ini dilakukan tiga tahap persiapan data, yaitu:
+### Encoding fitur kategori 
 Terdapat 5 data kategori yaitu 'gender', 'ever_married', 'work_type', 'Residence_type', 'smoking_status' yang akan dilakukan proses encoding menggunakan teknik _one-hot-encoding_. Teknik ini memberikan fitur baru yang sesuai sehingga dapat mewakili variabel kategori.
 ````
 categorical_columns = ['gender', 'ever_married', 'work_type', 'Residence_type', 'smoking_status']
@@ -136,8 +170,9 @@ stroke['bmi'] = stroke['bmi'].replace(np.NaN, 0)
 ````
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/6b078403-eff5-472d-a926-74ee322b1d79)
 
-- Pembagian dataset dengan fungsi train_test_split dari library sklearn
-Dataset dibagi menjadi data train dan data test untuk menguji seberapa baik generalisasi model terhadap data baru.
+### Train-Test-Split
+Pembagian dataset dengan fungsi train_test_split dari library sklearn
+Dataset dibagi menjadi data train dan data test untuk menguji seberapa baik generalisasi model terhadap data baru. Pembagian yang dilakukan yaitu 80:20.
 ````
 from sklearn.model_selection import train_test_split
 
@@ -152,7 +187,8 @@ print(f'Total # of sample in test dataset: {len(x_test)}')
 ````
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/61d3a83e-e1f3-4d7a-a914-fa7a3fe46471)
 
-- Standarisasi
+### Standarisasi
+Standardisasi merupakan teknik transformasi yang paling umum digunakan dalam tahap persiapan pemodelan.
 ````
 from sklearn.preprocessing import StandardScaler
 numerical_features = ['avg_glucose_level', 'bmi']
@@ -171,7 +207,7 @@ x_train[numerical_features].describe().round(4)
 
 ## Modeling
 Pada Tahapan modeling digunakan tiga algoritma yaitu :
-- K-Nearest Neighbor
+### K-Nearest Neighbor
 KNN memiliki kelebihan mudah diimplementasikan, tidak memerlukan pra-pemrosessan data yang kompleks, dan dapat menangani data numerik dan kategorikal. KNN memiliki kekurangan yaitu sensitif terhadap noise dan menjadi lambat untuk data yang besar.
 ````
 from sklearn.neighbors import KNeighborsRegressor
@@ -183,7 +219,7 @@ knn.fit(x_train, y_train)
 models.loc['train_mse','knn'] = mean_squared_error(y_pred = knn.predict(x_train), y_true=y_train)
 ````
 
-- Random Forest
+### Random Forest
 RF memiliki kelebihan dalam menangani data yang kompleks, data yang tidak seimbang, dan tidak rentan terhadap overfitting. RF memiliki kekurangan yaitu dapat menjadi lambat untuk data yang besar, dan menghasilkan prediksi yang tidak konsisten.
 ````
 from sklearn.ensemble import RandomForestRegressor
@@ -194,7 +230,7 @@ RF.fit(x_train, y_train)
 models.loc['train_mse','RandomForest'] = mean_squared_error(y_pred=RF.predict(x_train), y_true=y_train)
 ````
 
-- Boosting Algorithm
+### Boosting Algorithm
 Boosting memiliki kelebihan yaitu dapat meningkatkan akurasi model pembelajaran mesin, dapat menangani data yang kompleks, dan tidak rentan terhadap overfitting. Boosting memiliki kekurangan yaitu dapat menjadi lambat untuk data yang besar dan dapat menghasilkan prediksi yang tidak konsisten.
 ````
 from sklearn.ensemble import AdaBoostRegressor
@@ -243,7 +279,7 @@ pd.DataFrame(pred_dict)
 
 Dari model yang digunakan model K-Nearest Neighbor (KNN) memberikan nilai error yang paling kecil. Sedangkan model random forest memiliki error yang paling besar. Model KNN merupakan model terbaik untuk melakukan prediksi stroke.
 
-## Bibliography
+## Reference
 Kaur, M., Sakhare, S. R., Wanjale, K., & Akter, F. (2022). Early stroke prediction methods for prevention of strokes. Behavioural Neurology, 2022.
 
 Kustanti, C., & Widyarani, L. (2023). Evaluasi Efektivitas Metode FAST Flipbook dalam Meningkatkan Deteksi Dini Stroke: Studi Pendidikan Pra-Rumah Sakit di Indonesia. NERS Jurnal Keperawatan, 19(2), 68-75.
