@@ -1,4 +1,5 @@
 # Laporan Proyek Machine Learning Roshied Mohammad
+
 ## Domain Proyek
 Stroke merupakan salah satu masalah kesehatan yang serius dengan dampak yang signifikan pada masyarakat. Penyebab dari stroke adalah gangguan pada suplai darah pada beberapa bagian dari otak. Stroke merupakan kondisi kesehatan yang membahayakan sehingga diperlukannya tindakan cepat untuk mencegah kondisi stroke yang lebih parah (Kaur, 2022).  
 
@@ -24,6 +25,8 @@ Dengan perkembangannya teknologi, stroke dapat di deteksi dengan penggunaan mach
 Pada repository ini digunakan dataset [Stroke Prediction Kaggle](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset). Dataset ini memeliki 5.510 pasien. Data tersebut merupakan data non-numerik seperti _work type, residence type, dan smoking status_. Serta fitur numerik seperti _age, body mass index, dan average glucose level_.
 ### Data Loading
 Memunculkan deskripsi setiap fitur dari dataset dengan tipedatanya.
+
+Tabel 1. Menampilkan deskripsi setiap fitur dari dataset dengan tipedatanya.
 |   | Column            | Non-Null Count | Dtype   |
 |---|-------------------|-----------------|---------|
 | 0 | id                | 5110 non-null   | int64   |
@@ -46,6 +49,7 @@ Pada dataset ini dilakukan exploratory data analysis untuk mengetahui lebih lanj
 Deskripsi Variabel
   Deskripsi variabel dilakukan untuk mengetahu jenis-jenis variabel dan nilai-nilai dari variabel tersebut. Data tersebut kemudian dapat membantu memahami pengelolaan data yang akan dipersiapkan.
 
+Tabel 2. Menampilkan data head dari dataset.
 |id|gender|age|hypertension|heart_disease|ever_married|work_type|Residence_type|avg_glucose_level|bmi|smoking_status|stroke|
 |-|-|-|-|-|-|-|-|-|-|-|-|
 |9046|Male|67.0|0|1|Yes|Private|Urban|228.69|36.6|formerly smoked|1|
@@ -54,6 +58,7 @@ Deskripsi Variabel
 |60182|Female|49.0|0|0|Yes|Private|Urban|171.23|34.4|smokes|1|
 |1665|Female|79.0|1|0|Yes|Self-employed|Rural|174.12|24.0|never smoked|1|
 
+Tabel 3. Menampilkan statistik deskriptif dari data numerik.
 ||id|age|hypertension|heart_disease|avg_glucose_level|bmi|stroke|
 |-|-|-|-|-|-|-|-|
 |count|5110.000000|5110.000000|5110.000000|5110.000000|5110.000000|4909.000000|5110.000000|
@@ -83,6 +88,7 @@ Sehingga,
 Nilai 0 di kolom avg_glucose_level:  0
 Nilai 0 di kolom bmi:  201
 
+Tabel 4. Menampilkan dataset head dan tail dari dataset yang sudah tidak memiliki missing value. 
 || id | gender | age | hypertension | heart_disease | ever_married | work_type | Residence_type | avg_glucose_level | bmi | smoking_status | stroke |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 9046 | Male | 67.0 | 0 | 1 | Yes | Private | Urban | 228.69 | 36.6 | formerly smoked | 1 |
@@ -105,12 +111,23 @@ Nilai 0 di kolom bmi:  201
 ### Fitur age
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/c307b0e0-c1df-49a9-9d86-971ba75add43)
 
+Gambar 1. IQR Fitur Age
+
+Pada gambar 1, menampilkan rentang IQR pada fitur age yang berada pada rentang 20 sampai 60.
+
 ### Fitur avg_glucose_level
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/4fb5a353-3aad-4620-a6e7-5fe6d419966e)
+
+Gambar 2. IQR Fitur avg_glucose_level
+
+Pada gambar 2, menampilkan rentang IQR pada fitur avg_glucose_level yang berada pada rentang 50 sampai 150 dengan outliers setelah 150.
 
 ### Fitur bmi
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/842d8d14-1c5e-49ef-818f-d2402cc89464)
 
+Gambar 3. IQR Fitur bmi
+
+Pada gambar 3, menampilkan rentang IQR pada fitur bmi yang berada pada rentang 20 sampai 40 dengan outliers setelah 40.
 ### Membuat batas bawah dan atas
 Menggunakan metode IQR untuk mengidentifikasikan outliers yang berada di luar Q1 dan Q3. Nilai apapun yang berada di luar batas ini dianggap sebagai outlier.
 Didapatkan batas bawah dan atas yaitu (1372, 22) setelah menggunakan perhitungan IQR=Q3-Q1
@@ -120,9 +137,14 @@ Didapatkan batas bawah dan atas yaitu (1372, 22) setelah menggunakan perhitungan
 Pada tahap ini, pengecekan rata-rata umur terhadap masing-masing fitur untuk mengetahui pengaruh fitur kategori terhadap umur.
 
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/921f0bc8-6e6e-4a3d-acec-9859fde62848)
+Gambar 4. Rata-rata 'age' relatif terhadap gender
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/6a9774b9-92ac-46a6-8d02-b142502f2ff5)
+Gambar 5. Rata-rata 'age' relatif terhadap ever_married
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/7d698ad6-5e47-404a-b732-0cc91171cd0a)
+Gambar 6. Rata-rata 'age' relatif terhadap work_type
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/9a69c0a6-a709-419f-a095-e9893bca5fc8)
+Gambar 7. Rata-rata 'age' relatif terhadap Residence_type
+
 - Pada fitur gender umur cederung memiliki jumlah data yang hampir sama pada rentang 35-40.
 - Pada fitur ever_married terlihat perbedaan yaitu pada umur 20-50 telah menikah.
 - Pada fitur residence_type terbagi rata pada rural dan urban.
@@ -132,11 +154,14 @@ Untuk mengamati hubungan antara fitur numerik menggunakan fungsi fairplot().
 
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/5835592b-d743-4b9f-9306-9038403af442)
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/01bf5be2-3ec5-4afb-abd4-e86c5fa2aac1)
+Gambar 8. Grafik Numerical Features
 
 ### Correlation Matrix
 Membuat dan menampilkan matriks korelasi antara fitur-fitur numerik dalam dataset.
 
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/e1e92353-08ff-4f31-bc33-796d7e2d40ea)
+
+Gambar 9. Grafik Correlation Matrix
 
 ## Data Preparation
 Pada dataset ini dilakukan tiga tahap persiapan data, yaitu:
@@ -147,6 +172,7 @@ Alasan dilakukannya encoding fitur kategori pada dataset ini adalah:
 - Model predictive analytics umumnya lebih mudah bekerja dengan fitur numerik daripada fitur kategori.
 - Encoding fitur kategori dapat membantu model untuk membedakan antar kategori.
 
+Tabel 5. Menampilkan dataset dengan fitur kategori yang telah dikonversi menjadi fitur numerik.
 | age | hypertension | heart_disease | avg_glucose_level | bmi | stroke | gender_Female | gender_Male | gender_Other | ever_married_No | ... | work_type_Never_worked | work_type_Private | work_type_Self-employed | work_type_children | Residence_type_Rural | Residence_type_Urban | smoking_status_Unknown | smoking_status_formerly_smoked | smoking_status_never_smoked | smoking_status_smokes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 249 | 3.0 | 0 | 95.12 | 18.0 | 0 | 0 | 1 | 0 | 1 | ... | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 0 | 0 |
@@ -181,6 +207,7 @@ Alasan dilakukannya standarisasi pada dataset ini adalah:
 - Standarisasi dapat membantu model untuk lebih cepat konvergen.
 - Standarisasi dapat membantu model untuk lebih akurat.
 
+Tabel 6. Menampilkan head data avg_glucose_level dan bmi yang telah standarisasi.
 ||avg_glucose_level|bmi|
 |-|-|-|
 |520|-0.799319|2.571418|
@@ -189,7 +216,7 @@ Alasan dilakukannya standarisasi pada dataset ini adalah:
 |1777|0.269374|-0.805584|
 |1720|-0.916787|0.354343|
 
-Menampilkan statistik deskriptif ringkas dari fitur-fitur numerik.
+Tabel 7. Menampilkan statistik deskriptif ringkas dari fitur-fitur numerik.
 | | avg_glucose_level | bmi |
 |---|---|---|
 |count | 3004.0000 | 3004.0000 |
@@ -239,9 +266,13 @@ Pada evaluasi metrik yang digunakan pada model regresi merupakan metrik Mean Squ
 MSE merupakan metrik evaluasi yang umum digunakan untuk mengukur kinerja mnodel regresi. MSE mengukur rata-rata kuadrat kesalahan antara prediksi model dan nilai sebenarnya.
 MSE dipilih karena sesuai dengan tujuan dari pemodelan, yaitu untuk memprediksi nilai stroke dengan akurat. MSE mengukur seberapa dekat prediksi model dengan nilai sebenarnya. Semakin kecil nilai MSE, maka semakin akurat model dalam memprediksi nilai stroke.
 
-![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/5df18aa8-c44b-4467-9695-cd99be139ce4)
+$$
+\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+$$
 
 Pengukuran performa dari 3 Model dengan menghitung mean squared error (MSE)
+
+Tabel 8. Hasil performa 3 model.
 ||train|test|
 |-|-|-|
 |KNN|0.14536|0.18468|
@@ -250,8 +281,11 @@ Pengukuran performa dari 3 Model dengan menghitung mean squared error (MSE)
 
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/f2b86993-9a52-4241-8329-c02eb2e1740f)
 
+Gambar 10. Grafik batang hasil performa 3 model.
+
 Dari model yang digunakan model K-Nearest Neighbor (KNN) memberikan nilai error yang paling kecil yaitu 26.1. Sedangkan model random forest memiliki error yang paling besar yaitu 30.8. Model KNN merupakan model terbaik untuk melakukan prediksi stroke.
 
+Tabel 9. Pengukuran prediksi 3 model.
 ||y_true|prediksi_KNN|prediksi_RF|prediksi_Boosting|
 |-|-|-|-|-|
 |3653|14.0|26.1|30.8|30.6|
