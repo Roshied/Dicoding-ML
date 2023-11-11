@@ -52,11 +52,27 @@ Deskripsi Variabel
 ````
 stroke.head()
 ````
-![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/e25cf203-101c-4f67-ac71-96c48d5ff1bb)
+|id|gender|age|hypertension|heart_disease|ever_married|work_type|Residence_type|avg_glucose_level|bmi|smoking_status|stroke|
+|-|-|-|-|-|-|-|-|-|-|-|-|
+|9046|Male|67.0|0|1|Yes|Private|Urban|228.69|36.6|formerly smoked|1|
+|51676|Female|61.0|0|0|Yes|Self-employed|Rural|202.21|NaN|never smoke|1|
+|31112|Male|80.0|0|1|Yes|Private|Rural|105.92|32.5|never smoked|1|
+|60182|Female|49.0|0|0|Yes|Private|Urban|171.23|34.4|smokes|1|
+|1665|Female|79.0|1|0|Yes|Self-employed|Rural|174.12|24.0|never smoked|1|
 ````
 stroke.describe()
 ````
-![image](https://github.com/Roshied/Dicoding-ML/assets/68040731/30fc8c45-af35-444e-ac01-e3fe99b7a6b3)
+||id|age|hypertension|heart_disease|avg_glucose_level|bmi|stroke|
+|-|-|-|-|-|-|-|-|
+|count|5110.000000|5110.000000|5110.000000|5110.000000|5110.000000|4909.000000|5110.000000|
+|mean|36517.829354|43.226614|0.097456|0.054012|106.147677|28.893237|0.048728|
+|std|21161.721625|22.612647|0.296607|0.226063|45.283560|7.854067|0.215320|
+|min|67.000000|0.080000|0.000000|0.000000|55.120000|10.300000|0.000000|
+|25%|17741.250000|25.000000|0.000000|0.000000|77.245000|23.500000|0.000000|
+|50%|36932.000000|45.000000|0.000000|0.000000|91.885000|28.100000|0.000000|
+|75%|54682.000000|61.000000|0.000000|0.000000|114.090000|33.100000|0.000000|
+|max|72940.000000|82.000000|1.000000|1.000000|271.740000|97.600000|1.000000|
+
 
 - Gender : merupakan jenis kelamin dari pasien yaitu male, female atau other
 - Age : merupakan umur atau usia dari pasien 0.8 sampai 82 tahun
@@ -82,8 +98,24 @@ print("Nilai 0 di kolom bmi: ", z)
 stroke = stroke.loc[(stroke['bmi'] != 0)]
 stroke
 ````
-![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/d7847326-e9a3-4b9e-a307-6861585607af)
-![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/3e13b31f-9eda-42a0-bc4a-a140f1583ae8)
+Nilai 0 di kolom avg_glucose_level:  0
+Nilai 0 di kolom bmi:  201
+
+|| id | gender | age | hypertension | heart_disease | ever_married | work_type | Residence_type | avg_glucose_level | bmi | smoking_status | stroke |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 9046 | Male | 67.0 | 0 | 1 | Yes | Private | Urban | 228.69 | 36.6 | formerly smoked | 1 |
+| 31112 | Male | 80.0 | 0 | 1 | Yes | Private | Rural | 105.92 | 32.5 | never smoked | 1 |
+| 60182 | Female | 49.0 | 0 | 0 | Yes | Private | Urban | 171.23 | 34.4 | smokes | 1 |
+| 1665 | Female | 79.0 | 1 | 0 | Yes | Self-employed | Rural | 174.12 | 24.0 | never smoked | 1 |
+| 56669 | Male | 81.0 | 0 | 0 | Yes | Private | Urban | 186.21 | 29.0 | formerly smoked | 1 |
+| ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... |
+| 5104 | Female | 13.0 | 0 | 0 | No | children | Rural | 103.08 | 18.6 | Unknown | 0 |
+| 44873 | Female | 81.0 | 0 | 0 | Yes | Self-employed | Urban | 125.20 | 40.0 | never smoked | 0 |
+| 19723 | Female | 35.0 | 0 | 0 | Yes | Self-employed | Rural | 82.99 | 30.6 | never smoked | 0 |
+| 37544 | Male | 51.0 | 0 | 0 | Yes | Private | Rural | 166.29 | 25.6 | formerly smoked | 0 |
+| 44679 | Female | 44.0 | 0 | 0 | Yes | Govt_job | Urban | 85.28 | 26.2 | Unknown | 0 |
+
+4904 rows x 12 columns
 
 - Outliers
   Kemudian sampel-sample yang memiliki nilai yang sangat jauh dari cakupan umum juga dikeluarkan dari dataset.
@@ -106,7 +138,7 @@ stroke=stroke[~((stroke<(Q1-1.5*IQR))|(stroke>(Q3+1.5*IQR))).any(axis=1)]
 
 stroke.shape
 ````
-![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/30b10fa1-c615-4633-8223-4df9608de0c3)
+Didapatkan batas bawah dan atas yaitu (1372, 22) setelah menggunakan perhitungan IQR=Q3-Q1
 
 ## Multivariate Analysis
 ### Categorical Features
@@ -135,6 +167,7 @@ sns.pairplot(stroke, diag_kind = 'kde')
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/01bf5be2-3ec5-4afb-abd4-e86c5fa2aac1)
 
 ### Correlation Matrix
+Membuat dan menampilkan matriks korelasi antara fitur-fitur numerik dalam dataset.
 ````
 plt.figure(figsize=(10, 8))
 correlation_matrix = stroke.corr().round(2)
@@ -163,7 +196,22 @@ for column in categorical_columns:
 
 stroke['bmi'] = stroke['bmi'].replace(np.NaN, 0)
 ````
-![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/6b078403-eff5-472d-a926-74ee322b1d79)
+
+| age | hypertension | heart_disease | avg_glucose_level | bmi | stroke | gender_Female | gender_Male | gender_Other | ever_married_No | ... | work_type_Never_worked | work_type_Private | work_type_Self-employed | work_type_children | Residence_type_Rural | Residence_type_Urban | smoking_status_Unknown | smoking_status_formerly_smoked | smoking_status_never_smoked | smoking_status_smokes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 249 | 3.0 | 0 | 95.12 | 18.0 | 0 | 0 | 1 | 0 | 1 | ... | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 0 | 0 |
+| 251 | 8.0 | 0 | 110.89 | 17.6 | 0 | 1 | 0 | 0 | 1 | ... | 0 | 1 | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 |
+| 252 | 70.0 | 0 | 69.04 | 35.9 | 0 | 1 | 0 | 0 | 0 | ... | 0 | 1 | 0 | 0 | 1 | 0 | 0 | 1 | 0 | 0 |
+| 253 | 14.0 | 0 | 161.28 | 19.1 | 0 | 0 | 1 | 0 | 1 | ... | 1 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 | 0 |
+| 255 | 52.0 | 0 | 77.59 | 17.7 | 0 | 1 | 0 | 0 | 0 | ... | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... |
+| 5104 | 13.0 | 0 | 103.08 | 18.6 | 0 | 1 | 0 | 0 | 1 | ... | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 0 | 0 |
+| 5106 | 81.0 | 0 | 125.20 | 40.0 | 0 | 1 | 0 | 0 | 0 | ... | 0 | 0 | 1 | 0 | 0 | 1 | 0 | 0 | 1 | 0 |
+| 5107 | 35.0 | 0 | 82.99 | 30.6 | 0 | 1 | 0 | 0 | 0 | ... | 0 | 0 | 1 | 0 | 1 | 0 | 0 | 0 | 1 | 0 |
+| 5108 | 51.0 | 0 | 166.29 | 25.6 | 0 | 0 | 1 | 0 | 0 | ... | 0 | 1 | 0 | 0 | 1 | 0 | 0 | 1 | 0 | 0 |
+| 5109 | 44.0 | 0 | 85.28 | 26.2 | 0 | 1 | 0 | 0 | 0 | ... | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 |
+
+3755 rows x 22 columns
 
 ### Train-Test-Split
 Pembagian dataset dengan fungsi train_test_split dari library sklearn
@@ -184,7 +232,9 @@ print(f'Total # of sample in whole dataset: {len(x)}')
 print(f'Total # of sample in train dataset: {len(x_train)}')
 print(f'Total # of sample in test dataset: {len(x_test)}')
 ````
-![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/61d3a83e-e1f3-4d7a-a914-fa7a3fe46471)
+Total # of sample in whole dataset: 3755
+Total # of sample in train dataset: 3004
+Total # of sample in test dataset: 751
 
 ### Standarisasi
 Standardisasi merupakan teknik transformasi yang paling umum digunakan dalam tahap persiapan pemodelan dengan menggunakan fungsi sklearn.preprocessing.StandardScaler()
@@ -199,11 +249,28 @@ scaler.fit(x_train[numerical_features])
 x_train[numerical_features] = scaler.transform(x_train.loc[:, numerical_features])
 x_train[numerical_features].head()
 ````
-![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/6a1566f7-44f1-42dd-96d8-1672b8d75fd4)
+||avg_glucose_level|bmi|
+|-|-|-|
+|520|-0.799319|2.571418|
+|1814|-0.139998|0.750773|
+|1938|-0.348437|-0.365105|
+|1777|0.269374|-0.805584|
+|1720|-0.916787|0.354343|
+
 ````
 x_train[numerical_features].describe().round(4)
 ````
-![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/8db29635-e747-4e65-bdea-422c5e6074df)
+Menampilkan statistik deskriptif ringkas dari fitur-fitur numerik.
+| | avg_glucose_level | bmi |
+|---|---|---|
+|count | 3004.0000 | 3004.0000 |
+|mean | -0.0000 | 0.0000 |
+|std | 1.0002 | 1.0002 |
+|min | -1.6026 | -2.5235 |
+|25% | -0.7273 | -0.7175 |
+|50% | -0.1561 | -0.0715 |
+|75% | 0.5585 | 0.6333 |
+|max | 3.3889 | 2.9385 |
 
 ## Modeling
 Pada Tahapan modeling digunakan tiga algoritma yaitu :
@@ -279,7 +346,12 @@ for name, model in model_dict.items():
 
 mse
 ````
-![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/2827d1b7-f1f0-41b9-b972-8260db3f1520)
+Pengukuran performa dari 3 Model dengan menghitung mean squared error (MSE)
+||train|test|
+|-|-|-|
+|KNN|0.14536|0.18468|
+|RF|0.038683|0.198566|
+|Boosting|0.170451|0.168157|
 ````
 fig, ax = plt.subplots()
 mse.sort_values(by='test', ascending=False).plot(kind='barh', ax=ax, zorder=3)
@@ -294,9 +366,13 @@ for name, model in model_dict.items():
 
 pd.DataFrame(pred_dict)
 ````
-![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/46a1aba0-8a7b-4464-a3a4-0f3cf51bdd0f)
-
 Dari model yang digunakan model K-Nearest Neighbor (KNN) memberikan nilai error yang paling kecil yaitu 26.1. Sedangkan model random forest memiliki error yang paling besar yaitu 30.8. Model KNN merupakan model terbaik untuk melakukan prediksi stroke.
+
+||y_true|prediksi_KNN|prediksi_RF|prediksi_Boosting|
+|-|-|-|-|-|
+|3653|14.0|26.1|30.8|30.6|
+
+
 
 Berdasarkan hasil evaluasi, dapat disimpulkan bahwa model KNN merupakan model terbaik untuk melakukan prediksi stroke.
 ## Reference
