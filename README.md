@@ -101,6 +101,7 @@ Alasan dilakukannya train-test-split pada dataset ini adalah:
 - Data train digunakan untuk membangun model.
 - Data test digunakan untuk mengevaluasi model.
 - Pembagian 80:20 merupakan pembagian yang umum digunakan dalam predictive analytics.
+
 ![image](https://github.com/Roshied/Stroke-Prediction-Data-Analytics/assets/68040731/61d3a83e-e1f3-4d7a-a914-fa7a3fe46471)
 
 ### Standarisasi
