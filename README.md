@@ -70,7 +70,7 @@ stroke.describe()
 
 dengan mendeskripsikan variabel-variabel tersebut dapat diketahui  Variabel numerik yaitu _age, body mass index, dan average glucose level_ dan variabel kategori yaitu _work type, residence type, dan smoking status_.
 - Missing Value
-  Dari data yang sudah diketahui jenis variabel tersebut dapat kita lihat bahwa terdepat beberapa sampel yang memiliki variabel dengan nilai nol atau tidak memiliki nilai (missing value). Untuk mengurangi error dalam penggunaan dataset sampel-sampel yang memiliki missing value akan dikeluarkan dari dataset.
+  Dari data yang sudah diketahui jenis variabel tersebut dapat dilihat bahwa terdepat beberapa sampel yang memiliki variabel dengan nilai nol atau tidak memiliki nilai (missing value). Untuk mengurangi error dalam penggunaan dataset sampel-sampel yang memiliki missing value akan dikeluarkan dari dataset.
 ````
 stroke['bmi'] = stroke['bmi'].replace(np.NaN, 0)
 y = (stroke.avg_glucose_level == 0).sum()
@@ -239,6 +239,7 @@ RF.fit(x_train, y_train)
 
 models.loc['train_mse','RandomForest'] = mean_squared_error(y_pred=RF.predict(x_train), y_true=y_train)
 ````
+Jumlah n yang dipilih adalah 50. Jumlah ini dipilih berdasarkan eksperimen yang dilakukan. Hasil ekseperimen menunjukan bahwa jumlah n 50 memberikan akurasi terbaik.
 RF memiliki kelebihan dalam menangani data yang kompleks, data yang tidak seimbang, dan tidak rentan terhadap overfitting. RF memiliki kekurangan yaitu dapat menjadi lambat untuk data yang besar, dan menghasilkan prediksi yang tidak konsisten.
 
 ### Boosting Algorithm
